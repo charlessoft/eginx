@@ -59,6 +59,7 @@ ngx_http_miniuds_handler(ngx_http_request_t *r)
     ngx_buf_t *b;
     ngx_chain_t out;
 
+    ngx_str_t relative_path;
     int bGetHtml = 0;
 
     ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "==!!== uri: %V args: %V exten: %V request_line: %V unparsed_uri: %V.", &r->uri, &r->args, &r->exten, &r->request_line, &r->unparsed_uri);
@@ -68,7 +69,6 @@ ngx_http_miniuds_handler(ngx_http_request_t *r)
         }
     }
 
-    ngx_str_t relative_path;
     if ( bGetHtml == 1 ) {
         ngx_str_set(&relative_path, "{\"success\":true,\"relative_path\":\"/media/index.html\"}");
     } else {
