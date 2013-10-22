@@ -1,6 +1,8 @@
+BOOST_SRC=F:\cq\boost_1_54_0_32
+JSONCPP_SRC=F:\cq\jsoncpp\jsoncpp
 auto/configure --with-cc=cl \
     --prefix= \
-    --with-cc-opt="-DFD_SETSIZE=1024 /Y- /EHsc -If:\cq\boost_1_54_0_32 -IF:\cq\jsoncpp\jsoncpp\include" \
+    --with-cc-opt="-DFD_SETSIZE=1024 /Y- /EHsc -I${BOOST_SRC} -I${JSONCPP_SRC}\include" \
     --with-pcre=../pcre-8.31 \
     --with-zlib=../zlib-1.2.7 \
     --with-openssl=../openssl-1.0.1c \
@@ -15,11 +17,11 @@ auto/configure --with-cc=cl \
     --http-fastcgi-temp-path=temp/fastcgi_temp \
     --with-select_module --with-http_ssl_module \
     --with-ipv6  \
-    --with-ld-opt="/link /LIBPATH:F:\cq\boost_1_54_0_32\stage\lib \
+    --with-ld-opt="/link /LIBPATH:${BOOST_SRC}\stage\lib \
                    libboost_date_time-vc100-mt-s-1_54.lib \
                    libboost_regex-vc100-mt-s-1_54.lib \
                    LIBBoost_system-vc100-mt-s-1_54.lib \
-                   /LIBPATH:F:\cq\jsoncpp\jsoncpp\rel\lib_json \
+                   /LIBPATH:${JSONCPP_SRC}\rel\lib_json \
                    json_vc71_libmt.lib" \
     --add-module=../../modules/flvplay/src/ngx_http_flvplay \
 	--add-module=../../modules/miniuds/src/ngx_http_miniuds \
