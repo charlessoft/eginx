@@ -1,5 +1,5 @@
-BOOST_SRC=F:\cq\boost_1_54_0_32
-JSONCPP_SRC=F:\cq\jsoncpp\jsoncpp
+BOOST_SRC=F:/cq/boost_1_54_0_32
+JSONCPP_SRC=F:/cq/jsoncpp/jsoncpp
 auto/configure --with-cc=cl \
     --prefix= \
     --with-cc-opt="-DFD_SETSIZE=1024 /Y- /EHsc -I${BOOST_SRC} -I${JSONCPP_SRC}\include" \
