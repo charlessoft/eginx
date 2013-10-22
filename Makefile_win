@@ -1,0 +1,118 @@
+INSTALL_ROOT=/usr/local
+APP=eginx
+EGINX_SRC=eginx-1.2.4
+
+export OSTYPE="`uname -s`"
+
+ZLIB_SRC=zlib-1.2.7
+PCRE_SRC=pcre-8.31
+OPENSSL_SRC=openssl-1.0.1c
+NGINX_SRC=nginx-1.2.4
+NGINX_SRC=nginx_win-1.54
+#if [ $(OSTYPE) = "Darwin" ] ; \
+#	then \
+#echo "xxx" \
+#else \
+#echo "111" \
+#fi
+
+#if [ $(OSTYPE) = "Darwin" ] ; \
+#	then \
+#else \
+NGX_DEPS=--with-openssl=../openssl \
+		--with-pcre=../pcre \
+		--with-zlib=../zlib 
+#fi
+
+NGX_MODULES=--with-http_ssl_module \
+		#--with-http_flv_module \
+		#--with-http_mp4_module 
+
+NGX_ADD_MODULES=--add-module=../../modules/flvplay/src/ngx_http_flvplay \
+				--add-module=../../modules/miniuds/src/ngx_http_miniuds \
+				--add-module=../../modules/rtmp
+
+#CFLAGS=-I/usr/include/jsoncpp/json
+#JSONLIB=-ljsoncpp
+JSONLIB=-ljson
+
+all: _configure_nginx 
+	${MAKE} -C src/nginx 
+
+_configure_nginx: src/nginx/Makefile
+
+src/nginx/Makefile:
+	cd src && tar zxvf ${ZLIB_SRC}.tar.gz
+	cd src && tar zxvf ${PCRE_SRC}.tar.gz
+	cd src && tar zxvf ${OPENSSL_SRC}.tar.gz
+	cd src && unzip -o ${NGINX_SRC}.zip
+	if [ $(OSTYPE) = "Darwin" ] ; \
+	then \
+	cd src/nginx && \
+	./configure --prefix=${INSTALL_ROOT}/${EGINX_SRC} \
+		--with-cc-opt="-I/opt/local/include" \
+		--with-ld-opt="-L/opt/local/lib -lboost_system-mt ${JSONLIB} -lstdc++.6" \
+		${NGX_DEPS} \
+		${NGX_MODULES} \
+		${NGX_ADD_MODULES} \
+		; \
+	else \
+	cd src/nginx && \
+	./configure --prefix=${INSTALL_ROOT}/${EGINX_SRC} \
+		--with-cc-opt="-I/usr/local/geekdev/include" \
+		--with-ld-opt="-static ${JSONLIB} -lboost_system -lstdc++" \
+		${NGX_DEPS} \
+		${NGX_MODULES} \
+		${NGX_ADD_MODULES} \
+		; \
+	fi
+
+nginx_win:
+	cd src && tar zxvf ${ZLIB_SRC}.tar.gz
+	cd src && tar zxvf ${PCRE_SRC}.tar.gz
+	cd src && tar zxvf ${OPENSSL_SRC}.tar.gz
+	cd src && unzip -o ${NGINX_SRC}.zip
+	mkdir ./src/${NGINX_SRC}/objs/{conf,html,logs,temp/client_body_temp} -p
+	cp conf/*.* ./src/${NGINX_SRC}/objs/conf -r
+	cp html/*.* ./src/${NGINX_SRC}/objs/html -r
+	#echo "auto/configure --with-cc=cl \\\
+    #--prefix= \\\
+    #--with-cc-opt="-DFD_SETSIZE=1024 /Y- /EHsc -If:\cq\boost_1_54_0_32 -IF:\cq\jsoncpp\jsoncpp\include" \\\
+    #--with-pcre=../pcre-8.31 \\\
+    #--with-zlib=../zlib-1.2.7 \\\
+    #--with-openssl=../openssl-1.0.1c \\\
+    #--builddir=objs \\\
+    #--conf-path=conf/nginx.conf \\\
+    #--pid-path=logs/nginx.pid \\\
+    #--http-log-path=logs/access.log \\\
+    #--error-log-path=logs/error.log \\\
+    #--sbin-path=nginx.exe \\\
+    #--http-client-body-temp-path=temp/client_body_temp \\\
+    #--http-proxy-temp-path=temp/proxy_temp \\\
+    #--http-fastcgi-temp-path=temp/fastcgi_temp \\\
+    #--with-select_module --with-http_ssl_module \\\
+    #--with-ipv6  \\\
+    #--with-ld-opt=\"/link /LIBPATH:F:\cq\boost_1_54_0_32\stage\lib \
+    #               libboost_date_time-vc100-mt-s-1_54.lib \
+    #               libboost_regex-vc100-mt-s-1_54.lib \
+    #               LIBBoost_system-vc100-mt-s-1_54.lib \
+    #               /LIBPATH:F:\cq\jsoncpp\jsoncpp\rel\lib_json \
+    #               json_vc71_libmt.lib\" \\\
+	#			   ${NGX_ADD_MODULES} ">build_win32.sh
+	cp build_win32.sh ./src/${NGINX_SRC}
+clean:
+	rm -fr src/${ZLIB_SRC}
+	rm -fr src/${PCRE_SRC}
+	rm -fr src/${OPENSSL_SRC}
+	rm -fr src/${NGINX_SRC}
+
+install:
+	${MAKE} -C src/nginx install
+	test -d ${INSTALL_ROOT}/${APP} || ln -sf ${EGINX_SRC} ${INSTALL_ROOT}/${APP}
+	cp -Rf bin conf html ${INSTALL_ROOT}/${APP}/
+	if [ $(OSTYPE) = "Darwin" ] ; \
+	then \
+		cp -f conf/nginx.conf.macos ${INSTALL_ROOT}/${APP}/conf/nginx.conf ;\
+	fi
+
+
