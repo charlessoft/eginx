@@ -73,8 +73,8 @@ nginx_win:
 	cd src && tar zxvf ${OPENSSL_SRC}.tar.gz
 	cd src && unzip -o ${NGINX_SRC}.zip
 	mkdir ./src/${NGINX_SRC}/objs/{conf,html,logs,temp/client_body_temp} -p
-	cp conf/*.* ./src/${NGINX_SRC}/objs/conf -r
-	cp html/*.* ./src/${NGINX_SRC}/objs/html -r
+	cp conf ./src/${NGINX_SRC}/objs/ -rv
+	cp html ./src/${NGINX_SRC}/objs/ -rv
 	#echo "auto/configure --with-cc=cl \\\
     #--prefix= \\\
     #--with-cc-opt="-DFD_SETSIZE=1024 /Y- /EHsc -If:\cq\boost_1_54_0_32 -IF:\cq\jsoncpp\jsoncpp\include" \\\
