@@ -314,7 +314,7 @@ function ckstyle() { //定义总的风格
 	/*
 	该处定义是否使用开关灯，和right.swf插件配合作用,使用开灯效果时调用页面的js函数function closelights(){};
 	*/
-	ck.cpt_share='ckplayer/share.xml';
+	ck.cpt_share='/ckplayer/share.xml';
 	/*
 	分享插件调用的配置文件地址
 	调用插件开始
