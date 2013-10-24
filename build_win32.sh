@@ -1,6 +1,9 @@
+#BOOST_SRC=../../boost_1_54_0_32
 BOOST_SRC=F:/cq/boost_1_54_0_32
-JSONCPP_SRC=F:/cq/jsoncpp/jsoncpp
-CURL_SRC=F:/cq/curl
+JSONCPP_SRC=../../extlib/win/jsoncpp/jsoncpp
+#JSONCPP_SRC=F:/cq/jsoncpp/jsoncpp
+#CURL_SRC=F:/cq/curl
+CURL_SRC=../../extlib/win/curl
 auto/configure --with-cc=cl \
     --prefix= \
     --with-cc-opt="-DFD_SETSIZE=1024 -DBUILDING_LIBCURL -DHTTP_ONLY /Y- /EHsc -I${BOOST_SRC} -I${JSONCPP_SRC}/include -I${CURL_SRC}/include" \
@@ -24,6 +27,7 @@ auto/configure --with-cc=cl \
                    LIBBoost_system-vc100-mt-s-1_54.lib \
                    /LIBPATH:${JSONCPP_SRC}\rel\lib_json \
                    json_vc71_libmt.lib \
+                   /LIBPATH:${CURL_SRC} \
                    libcurl.lib \
                    ws2_32.lib \
                    winmm.lib \
